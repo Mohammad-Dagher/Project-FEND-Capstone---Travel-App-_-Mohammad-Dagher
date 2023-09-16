@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title> Travel planner </title>
+  <link href="https://fonts.googleapis.com/css?family=Oswald:400,600,700|Ranga:400,700&display=swap" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="style.css"> -->
+
+</head>
+
+<body>
+  <div id="app">
+    <div class="holder headline"> Travel planner </div>
+
+    <div id="box_contaner">
+
+
+
+
+
+      <div>
+
+
+
+
+
+        <div class="holder zip">
+          <label for="zip"> enter a city? " Trip Location " </label>
+          <input type="text" class="InputCity" id="city" placeholder=" enter a city here" rows="9" cols="50">
+        </div>
+        <div class="holder feel">
+          <label for="feelings"> Select a Trip Date </label>
+
+          <input type="date" id="Date" value="" placeholder=" enter date To Trip here EX: ( YYYY - MM - DD ) ">
+
+          <!-- <textarea class="myInput" id="feelings" placeholder="Enter your feelings here" rows="9" cols="50"></textarea> -->
+
+        </div>
+
+
+
+        <button id="generate" type="submit" onclick="return Client.Get_API_Action(event)"> Submit </button>
+
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+      <div class="holder entry">
+
+        <div class="title">Weather information for the flight destination : </div>
+
+        <div id="entryHolder">
+
+
+          <img id="image" src="" alt=" CITY " />
+
+
+          <div id="TimeLeft"></div>
+
+          <div id="temp"></div>
+
+
+          <div id="description"></div>
+
+
+        </div>
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  <script>
+
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+
+        navigator.serviceWorker.register('/service-worker.js').then(New_Registration => {
+          alert('SW registered successfuly: ' + New_Registration.value);
+        });
+
+      })
+
+    }
+
+
+
+  </script>
+
+</body>
+
+</html>
