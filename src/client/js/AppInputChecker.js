@@ -1,16 +1,12 @@
 function InputChecker(input) {
   if (input !== "") {
-    alert(' complete InputChecker() method return true  ');
+    alert(" complete InputChecker() method return true  ");
     return true;
   } else {
-
-    alert(' complete InputChecker() method  return false ');
+    alert(" complete InputChecker() method  return false ");
 
     return false;
   }
 }
 
 export { InputChecker };
-
-
-

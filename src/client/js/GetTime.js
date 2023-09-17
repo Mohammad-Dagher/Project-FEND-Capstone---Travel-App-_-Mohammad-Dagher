@@ -11,12 +11,9 @@ function Get_TimeLeft(date) {
     "TimeLeft"
   ).innerHTML = ` Day's Left Is ::  ${daysleft} `;
 
-alert(' complete Get_TimeLeft() method  ');
-
+  alert(" complete Get_TimeLeft() method  ");
 
   return daysleft;
-
 }
 
 export { Get_TimeLeft };
-
