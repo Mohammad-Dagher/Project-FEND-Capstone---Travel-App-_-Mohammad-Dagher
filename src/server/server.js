@@ -1,60 +1,41 @@
-let cuont = 0;
-
-
-
-const path = require('path')
-
+const path = require("path");
+const express = require("express"); ////....
 
 // Require Express to run server and routes
 
-const express = require("express"); ////....
+const mockAPIResponse = require("./mockAPI.js");
 
-const mockAPIResponse = require('./mockAPI.js');
-
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
 const cors = require("cors"); ///......
 
+const fetch = require("node-fetch");
+
+// var fs = require("fs");
+
+// var https =  require('follow-redirects').https;
+
 dotenv.config();
 
-
+let cuont = 0;
 // Start up an instance of app
 
 const app = express();
 
-
-const fetch = require("node-fetch");
-
-var fs = require("fs");
-
-
-
-
-
 // Cors for cross origin allowance
 
-
 app.use(cors());
-
-
-var https =  require('follow-redirects').https;
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-
-
-
-
 // Initialize the main project folder
 app.use(express.static("dist"));
 
-console.log(__dirname);
-
+// console.log(__dirname);
 
 ////.......................
-
 
 /* Global Variables */
 
@@ -75,9 +56,6 @@ const KEY_Pixabay_APi = process.env.KEY_Pixabay;
 
 //   Pixabay API : EX : ===> /////   `https://pixabay.com/api/?key=${KEY_Pixabay_APi}&q=${city}&image_type=photo`
 
-
-
-
 //////////////  Geonames  methode ::
 
 const get_Geonames = async (city) => {
@@ -89,28 +67,37 @@ const get_Geonames = async (city) => {
     const json_Data = await res.json();
 
     if (json_Data && json_Data.geonames) {
-    console.log(" json_Data.geonames[0].lat ---->>> "+json_Data.geonames[0].lat);
-    console.log(" json_Data.geonames[0].lng ---->>> "+json_Data.geonames[0].lng);
+      console.log(
+        " json_Data.geonames[0].lat ---->>> " + json_Data.geonames[0].lat
+      );
+      console.log(
+        " json_Data.geonames[0].lng ---->>> " + json_Data.geonames[0].lng
+      );
 
-    return {
-      lat: json_Data.geonames[0].lat,
-      lng: json_Data.geonames[0].lng,
-    };
-}else {
-  throw new Error("get_Geonames  data in json_Data not found");
-}
-
-
+      return {
+        lat: json_Data.geonames[0].lat,
+        lng: json_Data.geonames[0].lng,
+      };
+    } else {
+      throw new Error("get_Geonames  data in json_Data not found");
+    }
   } catch (error) {
-    console.log("can't fetching API get_Geonames methode or return data  :  ", error);
+    console.log(
+      "can't fetching API get_Geonames methode or return data  :  ",
+      error
+    );
   }
 };
 
 //////////////  weatherbit methode ::
 
 const get_weatherbit = async (latitude, longitude, DaysLeft) => {
-
-  console.log(" ## get_weatherbit method --> latitude, longitude, DaysLeft :::----->>>>  "+latitude, longitude, DaysLeft);
+  console.log(
+    " ## get_weatherbit method --> latitude, longitude, DaysLeft :::----->>>>  " +
+      latitude,
+    longitude,
+    DaysLeft
+  );
 
   try {
     if (DaysLeft <= 7) {
@@ -122,7 +109,10 @@ const get_weatherbit = async (latitude, longitude, DaysLeft) => {
 
       const json_Data = await res.json();
 
-      console.log(" ## get_weatherbit method --> json_Data.data :::----->>>>  "+json_Data.data);
+      console.log(
+        " ## get_weatherbit method --> json_Data.data :::----->>>>  " +
+          json_Data.data
+      );
 
       return json_Data.data[0];
     } else {
@@ -134,9 +124,10 @@ const get_weatherbit = async (latitude, longitude, DaysLeft) => {
 
       const json_Data = await res.json();
 
-
-      console.log(" ## get_weatherbit method --> json_Data.data  ( DaysLeft >7 ) :::----->>>>  "+json_Data.data);
-
+      console.log(
+        " ## get_weatherbit method --> json_Data.data  ( DaysLeft >7 ) :::----->>>>  " +
+          json_Data.data
+      );
 
       return json_Data.data[0];
     }
@@ -159,48 +150,55 @@ const get_ImageCity_Pixabay = async (city) => {
 
     return json_Data.hits[0].webformatURL;
   } catch (error) {
-    console.log("can't fetching images get_ImageCity_Pixabay methode : ", error);
+    console.log(
+      "can't fetching images get_ImageCity_Pixabay methode : ",
+      error
+    );
   }
 };
 
 ////   new post route  .......... http://localhost:3000/addpostnew
 
-app.post("/post", async   (req, res) => {
+app.post("/post", async (req, res) => {
   ////////////////////////////////////+++++++++
-
 
   cuont += 1;
 
   console.log(` cuont naw in  /addpostnew method it is : ${cuont} `);
 
- const { city , DaysLeft } = req.body;
+  const { city, DaysLeft } = req.body;
 
-  console.log("city + DaysLeft  ::::+++>  "+city + DaysLeft);
+  console.log("city + DaysLeft  ::::+++>  " + city + DaysLeft);
 
-  const Geonames = await  get_Geonames(city) ;
+  const Geonames = await get_Geonames(city);
 
-  const weatherbit = await get_weatherbit(Geonames.lat, Geonames.lng, DaysLeft) ;
+  const weatherbit = await get_weatherbit(Geonames.lat, Geonames.lng, DaysLeft);
 
-  const image_Pixabay = await get_ImageCity_Pixabay(city) ;
+  const image_Pixabay = await get_ImageCity_Pixabay(city);
 
+  console.log("Sacsses post methode  to servar   !!!!!!!!!!!!!");
 
-  console.log('Sacsses post methode  to servar   !!!!!!!!!!!!!');
+  console.log(image_Pixabay, {
+    weatherbit: {
+      high: weatherbit.high_temp,
+      low: weatherbit.low_temp,
+      description: weatherbit.weather.description,
+    },
+  });
 
-  console.log( image_Pixabay ,{weatherbit:{high: weatherbit.high_temp , low: weatherbit.low_temp , description: weatherbit.weather.description}} );
-
-
-  return res.send( { image_Pixabay , weatherbit: {temp: weatherbit.temp , description: weatherbit.weather.description} } ).status(200); ////...... 200 ==> successful
-
-  
-} );
-
-
-
-
-
+  return res
+    .send({
+      image_Pixabay,
+      weatherbit: {
+        temp: weatherbit.temp,
+        description: weatherbit.weather.description,
+      },
+    })
+    .status(200); ////...... 200 ==> successful
+});
 
 ///// GET route ..........  http://localhost:8081/
-app.get('/', function (req, res) {
+app.get("/", function (req, res) {
   cuont += 1;
 
   console.log(` / cuont naw it is : ${cuont} `);
@@ -208,9 +206,7 @@ app.get('/', function (req, res) {
   // res.sendFile(path.resolve('dist/index.html')).status(200); ////  200 ==> successful
 
   res.sendFile(path.join(__dirname, "dist", "index.html")).status(200); ////  200 ==> successful
-
-} )
-
+});
 
 // Setup Server
 const port = "8081"; /// http://localhost:8081/
@@ -220,22 +216,15 @@ function Servar_Running() {
   console.log(`Servar Is Running Now on localhost: ${port}`);
 }
 
-
-
 ///// GET route ..........  http://localhost:8081/test
 
-app.get('/test', function (req, res) {
+app.get("/test", function (req, res) {
   cuont -= 1;
 
   console.log(` /test cuont naw it is : ${cuont} `);
 
   res.send(mockAPIResponse).status(200); ////  200 ==> successful
-
-} )
-
-
-
-
+});
 
 /*
 
