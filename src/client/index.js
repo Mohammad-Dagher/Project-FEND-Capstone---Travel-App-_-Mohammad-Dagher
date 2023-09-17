@@ -11,8 +11,6 @@ console.log("CHANGE!!");
 
 import "./Styles/style.scss";
 
-// document.addEventListener('DOMContentLoaded', () => {  });
-
 document.getElementById("generate").addEventListener("click", Get_API_Action);
 
 export { Get_API_Action, InputChecker, Get_TimeLeft };
